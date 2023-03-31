@@ -13,4 +13,18 @@ The IRQ handler is added into stm32f4xx_it.c file. In our case, that we are usin
 
 The callback that will return from this part of the code is a __weak API. So we need to implement it at the main.c file.
 
-NOT WORKIG! check why parei aqui
+Then, on main.c just call the 
+
+```c
+uint8_t user_data[] = "The application is running\r\n";
+or
+char user_data[] = "The application is running\r\n";
+or
+char *userData = "THE APPLICATION IS RUNING\r\n";
+
+HAL_UART_Transmit_IT(&huart8, user_data, sizeof(user_data));
+or
+HAL_UART_Transmit_IT(&huart8, (uint8_t) user_data,(uint16_t) sizeof(user_data));
+or
+HAL_UART_Transmit_IT(&huart8, (uint8_t*) userData, strlen(userData));
+```
