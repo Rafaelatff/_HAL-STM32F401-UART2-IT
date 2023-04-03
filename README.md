@@ -27,4 +27,6 @@ or
 HAL_UART_Transmit_IT(&huart8, (uint8_t) user_data,(uint16_t) sizeof(user_data));
 or
 HAL_UART_Transmit_IT(&huart8, (uint8_t*) userData, strlen(userData));
+
+HAL_UART_Transmit_IT(&huart8,(uint8_t *) "1111111111110", (uint16_t) 13UL);
 ```
