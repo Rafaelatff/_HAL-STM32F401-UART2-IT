@@ -62,3 +62,40 @@ I was receiveing OOOff instead of aaa33, then NNNee instead of ccc55. The reason
 
 ![image](https://user-images.githubusercontent.com/58916022/229534770-71e0dd9c-5763-4a26-b500-47f5d5152dbc.png)
 
+## Using UART as a tool for debug
+
+### Debuging variable values
+
+First of all, I can create all the codes using *#ifdef* or *#if* to easily enable/disable the debug feature. 
+
+Since in code I am already using an *enum* type to select LED options, I also created a char array structure to hold the color names and then print those names (they must be strings and not integer values. The order and structure follows the *enum* so I can link them by *color_names[LEDoption]*.
+
+```c
+typedef enum {
+	RED,
+	BLUE,
+	YELLOW,
+	BI_RED,
+	BI_GREEN,
+	ALL
+} LEDoption;
+
+#if defined(debugOverUART) || defined(debugOverSemiHosting)
+const char* color_names[] = {
+	"RED",
+	"BLUE",
+	"YELLOW",
+	"BI_RED",
+	"BI_GREEN",
+	"ALL"
+};
+#endif
+```
+Then I use the *sprintf* function that works similarly to the printf function, but instead of printing the formatted string to the console, it stores the string in a character array.
+```c
+#ifdef debugOverUART
+	char debugMESS[100];
+	sprintf(debugMESS,"%s LED(s) will blink, for %d time(s), staying %d ms of time on and %d ms of time off.\n", color_names[LEDoption], times, timeOn, timeOff);
+	HAL_UART_Transmit_IT(&huart8,(uint8_t *) debugMESS, (uint16_t) strlen(debugMESS));
+#endif
+```
